@@ -473,7 +473,7 @@ with st.sidebar:
     st.title("📱 HAR Dashboard")
     st.caption("Hrishikesh Chandra · 26CSM1R05")
     st.caption("M.Tech CSE | 2026–2028")
-    st.caption("Mentor: Prof. Radha Krishna")
+    st.caption("Mentor: Prof. Pisipati Radha Krishna")
     st.markdown("---")
     st.markdown("**Dataset**")
     st.write("UCI HAR Smartphone Dataset")
