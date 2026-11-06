@@ -32,38 +32,7 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700&display=swap');
     :root { --navy:#0b1f3a; --blue:#123e70; --bright:#2d6ca8; --ink:#050a12; --muted:#b7c7dc; }
-    .stApp {
-        background:linear-gradient(180deg,#050a12 0%,#08172b 28%,#0c2b4d 62%,#174b7e 100%);
-        background-attachment:fixed;
-        color:#edf4ff;
-    }
-    /* Stronger scroll-responsive color shift. Streamlit's main area is the
-       scrolling surface, so the gradient is attached to that surface too. */
-    section.main {
-        background-image:linear-gradient(
-            180deg,
-            #050a12 0%,
-            #07162a 18%,
-            #0b2441 42%,
-            #10385f 70%,
-            #1a568b 100%
-        );
-        background-size:100% 260vh;
-        background-repeat:no-repeat;
-        background-attachment:local;
-        transition:background-color .35s ease;
-    }
-    @keyframes har-scroll-background {
-        0%   { filter:hue-rotate(0deg) brightness(.92); }
-        45%  { filter:hue-rotate(5deg) brightness(1.02); }
-        100% { filter:hue-rotate(12deg) brightness(1.12); }
-    }
-    @supports (animation-timeline: scroll(root block)) {
-        section.main .block-container {
-            animation:har-scroll-background linear both;
-            animation-timeline:scroll(root block);
-        }
-    }
+    .stApp { background: linear-gradient(145deg, #050a12 0%, #0a1930 52%, #102e53 100%); color:#edf4ff; }
     [data-testid="stHeader"] { background:rgba(0,0,0,0); }
     .main .block-container { padding-top:1.5rem; padding-bottom:3rem; max-width:1450px; }
     h1,h2,h3,h4 { font-family:'DM Serif Display', Georgia, serif !important; font-style:italic !important; color:#f4f7ff !important; }
@@ -73,218 +42,147 @@ st.markdown("""
     .hero p { color:#d9e8fb; margin:.55rem 0 0; font-size:1.02rem; }
     .section-card { background:linear-gradient(145deg,rgba(15,42,73,.96),rgba(7,20,38,.96)); border:1px solid #31577e; border-radius:18px; padding:1.25rem 1.35rem; margin-bottom:.9rem; box-shadow:0 9px 24px rgba(0,0,0,.22); color:#edf4ff; }
     .section-card b { color:#a9d5ff; }
-    .section-card {
-        position:relative;
-        transform:perspective(1100px) translateZ(0) scale(1);
-        transform-origin:center;
-        transition:transform .32s cubic-bezier(.2,.8,.2,1), box-shadow .32s ease,
-                   border-color .32s ease, filter .32s ease, opacity .32s ease;
-        will-change:transform, filter;
-        overflow:hidden;
-        backdrop-filter:blur(12px);
-    }
-    .section-card:before {
-        content:"";
-        position:absolute; inset:0;
-        background:linear-gradient(120deg,rgba(116,190,255,.13),transparent 42%,rgba(40,110,180,.08));
-        opacity:0; transition:opacity .3s ease; pointer-events:none;
-    }
-    .section-card:hover {
-        z-index:8;
-        transform:perspective(1100px) translateY(-9px) rotateX(2deg) rotateY(-1deg) scale(1.035);
-        border-color:#8ccaff;
-        box-shadow:0 24px 55px rgba(0,0,0,.48), 0 0 0 1px rgba(120,190,255,.22),
-                   0 0 32px rgba(45,130,210,.25);
-        filter:brightness(1.12) saturate(1.12);
-    }
-    .section-card:hover:before { opacity:1; }
-    /* Hover focus: dim and softly blur peer cards so the active card stands forward. */
-    .main .block-container:has(.section-card:hover) .section-card:not(:hover),
-    .main .block-container:has(.section-card:hover) [data-testid="stMetric"],
-    .main .block-container:has(.section-card:hover) [data-testid="stImage"],
-    .main .block-container:has(.section-card:hover) .stPlotlyChart,
-    .main .block-container:has(.section-card:hover) [data-testid="stDataFrame"] {
-        filter:blur(2.2px) brightness(.58);
-        opacity:.62;
-        transform:scale(.985);
-        transition:filter .28s ease, opacity .28s ease, transform .28s ease;
-    }
-    div[data-testid="stMetric"] {
-        position:relative;
-        transform:perspective(900px) translateZ(0);
-        transition:transform .3s ease, box-shadow .3s ease, filter .3s ease, opacity .3s ease;
-        will-change:transform;
-    }
-    div[data-testid="stMetric"]:hover {
-        z-index:8;
-        transform:perspective(900px) translateY(-8px) rotateX(3deg) scale(1.055);
-        border-color:#9bd0ff;
-        box-shadow:0 22px 42px rgba(0,0,0,.48), 0 0 28px rgba(65,150,230,.32);
-        filter:brightness(1.16);
-    }
-    .main .block-container:has(div[data-testid="stMetric"]:hover) div[data-testid="stMetric"]:not(:hover),
-    .main .block-container:has(div[data-testid="stMetric"]:hover) .section-card,
-    .main .block-container:has(div[data-testid="stMetric"]:hover) [data-testid="stImage"],
-    .main .block-container:has(div[data-testid="stMetric"]:hover) .stPlotlyChart,
-    .main .block-container:has(div[data-testid="stMetric"]:hover) [data-testid="stDataFrame"] {
-        filter:blur(2.4px) brightness(.58);
-        opacity:.58;
-        transition:filter .28s ease, opacity .28s ease;
-    }
-    [data-testid="stImage"], .stPlotlyChart, [data-testid="stDataFrame"],
-    [data-testid="stExpander"] {
-        border-radius:16px;
-        transition:transform .3s ease, box-shadow .3s ease, filter .3s ease, opacity .3s ease;
-    }
-    [data-testid="stImage"]:hover, .stPlotlyChart:hover,
-    [data-testid="stDataFrame"]:hover, [data-testid="stExpander"]:hover {
-        position:relative; z-index:7;
-        transform:perspective(1000px) translateY(-5px) scale(1.012);
-        box-shadow:0 18px 42px rgba(0,0,0,.38), 0 0 0 1px rgba(120,190,255,.24);
-        filter:brightness(1.06);
-    }
-    .main .block-container:has([data-testid="stImage"]:hover) [data-testid="stImage"]:not(:hover),
-    .main .block-container:has(.stPlotlyChart:hover) .stPlotlyChart:not(:hover),
-    .main .block-container:has([data-testid="stDataFrame"]:hover) [data-testid="stDataFrame"]:not(:hover) {
-        filter:blur(2px) brightness(.62);
-        opacity:.62;
-    }
-    /* Gentle 3D lift for section headings and interactive controls. */
-    .main h2, .main h3, .main h4 { text-shadow:0 3px 14px rgba(0,0,0,.35); }
-    div[data-testid="stTabs"] button[role="tab"] {
-        transform:translateZ(0);
-        box-shadow:0 5px 14px rgba(0,0,0,.18);
-    }
-    div[data-testid="stTabs"] button[role="tab"]:active {
-        transform:translateY(1px) scale(.97);
-    }
-    @media (prefers-reduced-motion: reduce) {
-        *, *:before, *:after { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
-    }
-
     .image-note { color:#9fb8d3; font-size:.82rem; font-style:italic; margin-top:-.35rem; }
     .kicker { color:#82bfff; text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; font-weight:800; }
     .callout { border-left:4px solid #63aef2; padding:.8rem 1rem; background:rgba(35,91,143,.18); border-radius:0 12px 12px 0; margin:.7rem 0 1rem; }
     .small-muted { color:#afc2d9; font-size:.9rem; }
     div[data-testid="stMetric"] { background:linear-gradient(145deg,#0b1f3a,#12365d); border:1px solid #31577e; padding:14px 16px; border-radius:15px; box-shadow:0 5px 16px rgba(0,0,0,.2); }
     div[data-testid="stMetric"] label, div[data-testid="stMetric"] [data-testid="stMetricValue"] { color:#f4f7ff !important; }
-    /* Futuristic HAR navigation: numbered glass capsules with hover glow. */
+
+
+    /* =========================================================
+       HIGH-VISIBILITY 3D TAB NAVIGATION
+       Broad BaseWeb selectors ensure styles reach Streamlit tabs.
+       ========================================================= */
     div[data-testid="stTabs"] {
-        position:relative;
-        padding:12px 14px 10px;
-        margin:0 0 1.35rem;
-        border:1px solid rgba(112,181,245,.24);
-        border-radius:22px;
-        background:linear-gradient(115deg,rgba(4,12,24,.88),rgba(13,39,68,.78));
-        box-shadow:0 14px 34px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.06);
-        backdrop-filter:blur(18px);
-    }
-    div[data-testid="stTabs"] [data-baseweb="tab-list"],
-    div[data-testid="stTabs"] [role="tablist"] {
-        display:flex !important;
-        align-items:center;
-        gap:.62rem !important;
-        flex-wrap:wrap;
-        border-bottom:0 !important;
-        background:transparent !important;
+        position:relative !important;
+        padding:16px 18px 20px !important;
+        margin:8px 0 26px !important;
+        border:1px solid rgba(123,190,245,.38) !important;
+        border-radius:22px !important;
+        background:linear-gradient(160deg,rgba(15,43,72,.96),rgba(3,12,24,.98)) !important;
+        box-shadow:0 18px 28px rgba(0,0,0,.42),
+                   inset 0 2px 0 rgba(255,255,255,.13),
+                   inset 0 -7px 14px rgba(0,0,0,.38) !important;
+        perspective:1200px !important;
         overflow:visible !important;
     }
-    div[data-testid="stTabs"] [data-baseweb="tab"],
-    div[data-testid="stTabs"] button[role="tab"] {
-        counter-increment:har-tab;
+    div[data-testid="stTabs"] [role="tablist"],
+    div[data-testid="stTabs"] [data-baseweb="tab-list"] {
+        display:flex !important;
+        align-items:center !important;
+        gap:14px !important;
+        flex-wrap:wrap !important;
+        border:0 !important;
+        background:transparent !important;
+        overflow:visible !important;
+        transform-style:preserve-3d !important;
+    }
+    /* Base tab surface: raised block with a visible dark extrusion below it. */
+    div[data-testid="stTabs"] [role="tab"],
+    div[data-testid="stTabs"] [data-baseweb="tab"] {
+        appearance:none !important;
+        -webkit-appearance:none !important;
+        position:relative !important;
         display:inline-flex !important;
         align-items:center !important;
         justify-content:center !important;
-        gap:.55rem !important;
-        min-height:46px;
-        padding:.55rem 1.05rem !important;
-        border:1px solid rgba(126,181,231,.28) !important;
-        border-bottom:1px solid rgba(126,181,231,.28) !important;
-        border-radius:999px !important;
-        background:linear-gradient(145deg,rgba(12,31,54,.96),rgba(7,17,32,.96)) !important;
-        color:#cfe2f7 !important;
-        font-size:.91rem !important;
-        font-weight:650 !important;
-        white-space:nowrap;
-        box-shadow:0 7px 18px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.05);
-        transform:translateY(0) scale(1);
-        transition:transform .26s cubic-bezier(.2,.8,.2,1), background .26s ease,
-                   border-color .26s ease, box-shadow .26s ease, color .26s ease;
-        position:relative;
+        min-height:48px !important;
+        padding:11px 19px 12px !important;
+        margin:0 0 8px !important;
+        border:1px solid #477ba8 !important;
+        border-bottom:1px solid #477ba8 !important;
+        border-radius:13px !important;
+        background:linear-gradient(145deg,#1b4267 0%,#102b49 52%,#091a2e 100%) !important;
+        color:#eaf5ff !important;
+        font-size:14px !important;
+        font-weight:750 !important;
+        line-height:1.2 !important;
+        white-space:nowrap !important;
+        text-decoration:none !important;
+        transform:translate3d(0,0,0) perspective(900px) rotateX(0deg) !important;
+        transform-origin:center bottom !important;
+        box-shadow:
+            0 7px 0 #04101d,
+            0 10px 0 #020912,
+            0 16px 22px rgba(0,0,0,.48),
+            inset 0 1px 0 rgba(255,255,255,.24),
+            inset 0 -3px 7px rgba(0,0,0,.28) !important;
+        transition:transform .22s ease, box-shadow .22s ease,
+                   background .22s ease, border-color .22s ease,
+                   filter .22s ease !important;
+        cursor:pointer !important;
         overflow:visible !important;
+        z-index:1 !important;
     }
-    div[data-testid="stTabs"] [data-baseweb="tab-list"],
-    div[data-testid="stTabs"] [role="tablist"] { counter-reset:har-tab; }
-    div[data-testid="stTabs"] [data-baseweb="tab"]::before,
-    div[data-testid="stTabs"] button[role="tab"]::before {
-        content:counter(har-tab, decimal-leading-zero);
-        display:inline-flex;
-        align-items:center;
-        justify-content:center;
-        flex:0 0 23px;
-        width:23px;
-        height:23px;
-        border-radius:50%;
-        color:#9fcfff;
-        background:rgba(64,133,194,.18);
-        border:1px solid rgba(126,190,245,.34);
-        font:700 .62rem Inter,sans-serif;
-        letter-spacing:-.02em;
-        box-shadow:inset 0 1px 3px rgba(0,0,0,.24);
-        transition:all .26s ease;
+    /* Top bevel highlight gives the tab a physical glossy surface. */
+    div[data-testid="stTabs"] [role="tab"]::before,
+    div[data-testid="stTabs"] [data-baseweb="tab"]::before {
+        content:"" !important;
+        position:absolute !important;
+        left:8px !important;
+        right:8px !important;
+        top:3px !important;
+        height:1px !important;
+        border-radius:99px !important;
+        background:rgba(255,255,255,.42) !important;
+        opacity:.9 !important;
+        pointer-events:none !important;
     }
-    div[data-testid="stTabs"] [data-baseweb="tab"]:hover,
-    div[data-testid="stTabs"] button[role="tab"]:hover {
-        background:linear-gradient(135deg,#1c5688,#12385f) !important;
+    /* Hover: tab visibly rises, tilts and casts a longer shadow. */
+    div[data-testid="stTabs"] [role="tab"]:hover,
+    div[data-testid="stTabs"] [data-baseweb="tab"]:hover {
+        transform:translate3d(0,-9px,18px) perspective(900px) rotateX(12deg) scale(1.055) !important;
+        background:linear-gradient(145deg,#49a8e8 0%,#2478b8 48%,#155080 100%) !important;
         color:#ffffff !important;
-        border-color:#9bd0ff !important;
-        transform:translateY(-5px) scale(1.045);
-        box-shadow:0 15px 30px rgba(0,0,0,.38), 0 0 25px rgba(69,157,232,.28);
-        z-index:5;
+        border-color:#c4e8ff !important;
+        filter:brightness(1.12) saturate(1.18) !important;
+        box-shadow:
+            0 11px 0 #0a2946,
+            0 16px 0 #041322,
+            0 27px 34px rgba(0,0,0,.56),
+            0 0 30px rgba(64,169,245,.48),
+            inset 0 2px 0 rgba(255,255,255,.42),
+            inset 0 -4px 8px rgba(0,0,0,.18) !important;
+        z-index:20 !important;
     }
-    div[data-testid="stTabs"] [data-baseweb="tab"]:hover::before,
-    div[data-testid="stTabs"] button[role="tab"]:hover::before {
-        color:#061322;
-        background:#b9e0ff;
-        border-color:#ffffff;
-        transform:rotate(-12deg) scale(1.13);
-        box-shadow:0 0 15px rgba(154,211,255,.55);
-    }
-    div[data-testid="stTabs"] [data-baseweb="tab"][aria-selected="true"],
-    div[data-testid="stTabs"] button[role="tab"][aria-selected="true"] {
-        background:linear-gradient(135deg,#2877b8,#174b7e) !important;
+    /* Selected tab stays lifted so users can see the active section. */
+    div[data-testid="stTabs"] [role="tab"][aria-selected="true"],
+    div[data-testid="stTabs"] [data-baseweb="tab"][aria-selected="true"] {
+        transform:translate3d(0,-5px,10px) perspective(900px) rotateX(7deg) !important;
+        background:linear-gradient(145deg,#56b5f2 0%,#287fbd 48%,#164c79 100%) !important;
         color:#ffffff !important;
-        border:1px solid #a4d5ff !important;
-        border-bottom:1px solid #a4d5ff !important;
-        box-shadow:0 0 0 3px rgba(105,177,239,.12), 0 12px 25px rgba(0,0,0,.32),
-                   0 0 24px rgba(65,150,230,.26);
-        transform:translateY(-2px);
-    }
-    div[data-testid="stTabs"] [data-baseweb="tab"][aria-selected="true"]::before,
-    div[data-testid="stTabs"] button[role="tab"][aria-selected="true"]::before {
-        color:#0a1c30;
-        background:#e5f4ff;
-        border-color:#ffffff;
-        box-shadow:0 0 16px rgba(210,238,255,.7);
+        border:1px solid #d0edff !important;
+        border-bottom:1px solid #d0edff !important;
+        box-shadow:
+            0 9px 0 #082440,
+            0 14px 0 #041321,
+            0 23px 30px rgba(0,0,0,.52),
+            0 0 0 3px rgba(111,193,250,.16),
+            0 0 32px rgba(66,165,235,.42),
+            inset 0 2px 0 rgba(255,255,255,.46),
+            inset 0 -4px 8px rgba(0,0,0,.18) !important;
+        z-index:12 !important;
     }
     div[data-testid="stTabs"] [data-baseweb="tab-highlight"],
-    div[data-testid="stTabs"] [data-baseweb="tab-border"] { display:none !important; }
+    div[data-testid="stTabs"] [data-baseweb="tab-border"] {
+        display:none !important;
+        opacity:0 !important;
+    }
+    div[data-testid="stTabs"] [role="tab"]:active,
+    div[data-testid="stTabs"] [data-baseweb="tab"]:active {
+        transform:translate3d(0,4px,0) perspective(900px) rotateX(-4deg) scale(.98) !important;
+        box-shadow:0 2px 0 #04101d, 0 5px 8px rgba(0,0,0,.36) !important;
+    }
+    @media (prefers-reduced-motion:reduce) {
+        div[data-testid="stTabs"] [role="tab"],
+        div[data-testid="stTabs"] [data-baseweb="tab"] {
+            transition:none !important;
+        }
+    }
     .pill { display:inline-block; background:#dcecff; color:#0b2a4c; padding:6px 12px; border-radius:30px; font-size:.82rem; font-weight:700; margin-right:6px; }
     [data-testid="stSidebar"] { background:linear-gradient(180deg,#050a12,#0b1f3a 70%,#123e70); }
     [data-testid="stSidebar"] * { color:#edf4ff !important; }
-    [data-testid="stSidebar"] button[kind="primary"] {
-        background:linear-gradient(135deg,#2e78b8,#174b7e) !important;
-        color:#ffffff !important; border:1px solid #8ccaff !important;
-        border-radius:14px !important; min-height:3.1rem;
-        box-shadow:0 10px 26px rgba(0,0,0,.32), 0 0 18px rgba(65,150,230,.18);
-        transition:transform .25s ease, box-shadow .25s ease, filter .25s ease;
-    }
-    [data-testid="stSidebar"] button[kind="primary"]:hover {
-        transform:translateY(-4px) scale(1.025);
-        box-shadow:0 16px 32px rgba(0,0,0,.42), 0 0 26px rgba(65,150,230,.36);
-        filter:brightness(1.15);
-    }
-
     .landing-shell { margin:-1.2rem -1rem 0; color:#f5f8ff; }
     .landing-cover { min-height:76vh; position:relative; overflow:hidden; display:flex; align-items:center; padding:5rem 6%; border-radius:0 0 28px 28px; background:linear-gradient(132deg,#05080f 0%,#05080f 48.8%,#0b1f3a 49%,#174b7e 100%); border:1px solid #1b3b60; box-shadow:0 18px 45px rgba(0,0,0,.28); }
     .landing-cover:after { content:''; position:absolute; inset:0; background-image:linear-gradient(90deg,rgba(5,8,15,.92),rgba(5,8,15,.40)),url('https://www.mdpi.com/healthcare/healthcare-10-01084/article_deploy/html/images/healthcare-10-01084-g001.png'); background-size:cover; background-position:center right; opacity:.30; mix-blend-mode:screen; pointer-events:none; }
@@ -312,46 +210,9 @@ st.markdown("""
         border-color:#ffffff !important; transform:translateY(-2px);
         box-shadow:0 7px 18px rgba(0,0,0,.24);
     }
-
-    div.stButton > button[kind="primary"] {
-        background:linear-gradient(135deg,#2e78b8,#174b7e) !important;
-        color:#ffffff !important;
-        border:1px solid #9bd0ff !important;
-        box-shadow:0 10px 25px rgba(0,0,0,.32),0 0 20px rgba(65,150,230,.22);
-    }
-    div.stButton > button[kind="primary"] p { color:#ffffff !important; }
-    div.stButton > button[kind="primary"]:hover {
-        background:linear-gradient(135deg,#4596d5,#1e5e98) !important;
-        color:#ffffff !important;
-        transform:translateY(-4px) scale(1.025);
-        box-shadow:0 17px 34px rgba(0,0,0,.4),0 0 30px rgba(80,170,245,.42);
-    }
-
     .stAlert { border-radius:14px; }
     code { color:#dcecff; }
     @media(max-width:700px) { .landing-cover{padding:3rem 7%;min-height:70vh;} .identity-grid{grid-template-columns:1fr;} .landing-shell{margin-left:-.5rem;margin-right:-.5rem;} }
-
-    /* SAFE ANIMATED BACKGROUND
-       Avoids fixed pseudo-element overlays and stacking contexts that can
-       hide Streamlit content on some browser/Streamlit combinations. */
-    .stApp {
-        background:
-            radial-gradient(ellipse at 15% 18%, rgba(29,116,190,.30) 0%, transparent 38%),
-            radial-gradient(ellipse at 82% 72%, rgba(24,88,158,.27) 0%, transparent 42%),
-            linear-gradient(135deg,#040912 0%,#07172b 44%,#0b2441 76%,#123e70 100%) !important;
-        background-size:180% 180%, 190% 190%, 220% 220% !important;
-        background-attachment:fixed !important;
-        animation:har-safe-aurora 24s ease-in-out infinite alternate;
-    }
-    @keyframes har-safe-aurora {
-        0%   { background-position:0% 0%, 100% 100%, 0% 50%; }
-        50%  { background-position:65% 35%, 20% 65%, 50% 50%; }
-        100% { background-position:100% 100%, 0% 0%, 100% 50%; }
-    }
-    section.main { background:transparent !important; }
-    @media (prefers-reduced-motion: reduce) {
-        .stApp { animation:none !important; }
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -421,38 +282,12 @@ if st.session_state.app_page == "introduction":
     </div>
     """, unsafe_allow_html=True)
     st.markdown('<div class="enter-wrap">', unsafe_allow_html=True)
-    intro_col1, intro_col2 = st.columns(2)
-    with intro_col1:
-        if st.button("ENTER HAR DASHBOARD  →", key="enter_har_dashboard", use_container_width=True):
-            st.session_state.app_page = "dashboard"
-            st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.stop()
-
-# ---------- CONCLUSION PAGE: CONTENT TO BE ADDED LATER ----------
-if st.session_state.app_page == "conclusion":
-    st.markdown("""
-    <div class="project-panel" style="min-height:68vh; margin-top:1rem;">
-      <div class="eyebrow">Human Activity Recognition · Project</div>
-      <div class="project-title">Conclusion</div>
-      <div class="mentor">Conclusion content will be added here.</div>
-    </div>
-    """, unsafe_allow_html=True)
-    st.markdown('<div class="enter-wrap">', unsafe_allow_html=True)
-    if st.button("← BACK TO INTRODUCTION", key="back_from_conclusion"):
-        st.session_state.app_page = "introduction"
+    if st.button("ENTER HAR DASHBOARD  →", key="enter_har_dashboard", use_container_width=True):
+        st.session_state.app_page = "dashboard"
         st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
     st.stop()
 
-
-# Always-visible navigation: the sidebar can be collapsed, so keep a return
-# control in the main page as well.
-top_nav_left, top_nav_right = st.columns([5, 1.5])
-with top_nav_right:
-    if st.button("← INTRODUCTION", key="top_return_to_introduction", use_container_width=True, type="primary"):
-        st.session_state.app_page = "introduction"
-        st.rerun()
 
 st.markdown("""
 <div class="hero">
@@ -495,9 +330,7 @@ with st.sidebar:
     st.write("• Decision Tree")
     st.write("• Random Forest")
     st.markdown("---")
-    st.markdown("**Navigation**")
-    st.markdown('<div class="small-muted">Return to the student and project introduction page.</div>', unsafe_allow_html=True)
-    if st.button("↩  BACK TO INTRODUCTION", key="return_to_introduction", use_container_width=True, type="primary"):
+    if st.button("← INTRODUCTION", key="return_to_introduction", use_container_width=True):
         st.session_state.app_page = "introduction"
         st.rerun()
     st.caption("Evaluation uses the official held-out test partition.")
@@ -754,72 +587,12 @@ with tabs[6]:
     st.subheader("Feature insights")
     importance_path = ARTIFACT_DIR / "feature_importance.csv"
     if importance_path.exists():
-        imp = pd.read_csv(importance_path)
-        imp = imp.sort_values("Importance", ascending=False).head(20).sort_values("Importance", ascending=True)
-
-        # Dark, high-contrast chart styling to match the black-and-navy dashboard.
-        fig = px.bar(
-            imp,
-            x="Importance",
-            y="Feature",
-            orientation="h",
-            title="TOP 20 · RANDOM FOREST FEATURE IMPORTANCE",
-            color="Importance",
-            color_continuous_scale=[
-                [0.00, "#163653"],
-                [0.35, "#17658a"],
-                [0.70, "#28a6bd"],
-                [1.00, "#a4eff0"]
-            ],
-            hover_data={"Importance": ":.5f", "Feature": True}
-        )
-        fig.update_traces(
-            marker_line_color="rgba(210,239,255,0.55)",
-            marker_line_width=0.7,
-            opacity=0.96,
-            hovertemplate="<b>%{y}</b><br>Importance: %{x:.5f}<extra></extra>"
-        )
-        fig.update_layout(
-            template="plotly_dark",
-            height=690,
-            autosize=True,
-            margin=dict(l=24, r=48, t=88, b=58),
-            paper_bgcolor="rgba(5,13,26,0.98)",
-            plot_bgcolor="rgba(8,25,45,0.98)",
-            font=dict(family="Inter, Arial, sans-serif", size=13, color="#EAF4FF"),
-            title=dict(
-                text="TOP 20 · RANDOM FOREST FEATURE IMPORTANCE",
-                x=0.025, xanchor="left",
-                font=dict(size=19, color="#EAF4FF", family="Inter, Arial, sans-serif")
-            ),
-            coloraxis_colorbar=dict(
-                title=dict(text="Importance", font=dict(color="#EAF4FF", size=12)),
-                tickfont=dict(color="#D6E8FA", size=11),
-                outlinecolor="rgba(180,220,255,0.3)",
-                bgcolor="rgba(8,25,45,0.9)"
-            ),
-            xaxis=dict(
-                title=dict(text="Feature importance score", font=dict(color="#CFE5FA", size=13)),
-                tickfont=dict(color="#D6E8FA", size=11),
-                gridcolor="rgba(150,190,225,0.16)",
-                zerolinecolor="rgba(150,190,225,0.28)",
-                showline=True,
-                linecolor="rgba(150,190,225,0.3)"
-            ),
-            yaxis=dict(
-                title=dict(text="Input feature", font=dict(color="#CFE5FA", size=13)),
-                tickfont=dict(color="#F0F6FF", size=11),
-                automargin=True,
-                gridcolor="rgba(0,0,0,0)",
-                showline=False
-            ),
-            hoverlabel=dict(
-                bgcolor="#102D4B",
-                bordercolor="#76C5F4",
-                font=dict(color="#FFFFFF", size=12)
-            )
-        )
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": True, "displaylogo": False})
+        imp = pd.read_csv(importance_path).head(20)
+        fig = px.bar(imp.sort_values("Importance"), x="Importance", y="Feature", orientation="h",
+                     title="Top 20 Random Forest feature importances",
+                     color="Importance", color_continuous_scale="Teal")
+        fig.update_layout(plot_bgcolor="white", paper_bgcolor="white")
+        st.plotly_chart(fig, use_container_width=True)
         st.caption("Feature importance indicates how much the fitted Random Forest used a feature for its splits. It does not establish causation.")
         st.markdown("#### How to interpret the ranking")
         st.write("Features near the top contributed more to the Random Forest's split decisions in this fitted model. Importance scores are model-specific: they describe how the forest used the available variables, not whether a feature independently causes or physically determines an activity.")
