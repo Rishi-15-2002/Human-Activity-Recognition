@@ -425,7 +425,7 @@ if st.session_state.app_page == "introduction":
         <div class="eyebrow">Project title</div>
         <div class="project-title">Human Activity Recognition Using Smartphone Sensors</div>
         <div class="eyebrow">Project mentor</div>
-        <div class="mentor">Prof. Radha Krishna</div>
+        <div class="mentor">Prof. Pisipati Radha Krishna</div>
       </section>
     </div>
     """, unsafe_allow_html=True)
