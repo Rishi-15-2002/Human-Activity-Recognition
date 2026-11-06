@@ -213,6 +213,154 @@ st.markdown("""
     .stAlert { border-radius:14px; }
     code { color:#dcecff; }
     @media(max-width:700px) { .landing-cover{padding:3rem 7%;min-height:70vh;} .identity-grid{grid-template-columns:1fr;} .landing-shell{margin-left:-.5rem;margin-right:-.5rem;} }
+
+    /* CONSOLIDATED 3D GLASS NAVIGATION */
+    div[data-testid="stTabs"] {
+        position:relative !important;
+        padding:16px 18px 22px !important;
+        margin:10px 0 28px !important;
+        border:1px solid rgba(123,190,245,.42) !important;
+        border-radius:24px !important;
+        background:linear-gradient(155deg,rgba(16,47,78,.97),rgba(3,11,23,.98)) !important;
+        box-shadow:0 18px 30px rgba(0,0,0,.48),
+                   inset 0 2px 0 rgba(255,255,255,.14),
+                   inset 0 -8px 15px rgba(0,0,0,.42) !important;
+        perspective:1400px !important;
+        overflow:visible !important;
+    }
+    div[data-testid="stTabs"] [role="tablist"],
+    div[data-testid="stTabs"] [data-baseweb="tab-list"] {
+        display:flex !important;
+        align-items:center !important;
+        gap:14px !important;
+        flex-wrap:wrap !important;
+        border:0 !important;
+        background:transparent !important;
+        overflow:visible !important;
+        transform-style:preserve-3d !important;
+    }
+    div[data-testid="stTabs"] [role="tab"],
+    div[data-testid="stTabs"] [data-baseweb="tab"] {
+        appearance:none !important;
+        position:relative !important;
+        min-height:49px !important;
+        padding:12px 20px !important;
+        margin:0 0 9px !important;
+        border:1px solid #5689b5 !important;
+        border-radius:14px !important;
+        background:linear-gradient(145deg,#204c73 0%,#123454 55%,#081a2c 100%) !important;
+        color:#eaf5ff !important;
+        font-size:14px !important;
+        font-weight:750 !important;
+        white-space:nowrap !important;
+        transform:translate3d(0,0,0) perspective(900px) rotateX(0deg) !important;
+        transform-origin:center bottom !important;
+        box-shadow:0 8px 0 #04101d,0 12px 0 #020912,
+                   0 17px 24px rgba(0,0,0,.5),
+                   inset 0 2px 0 rgba(255,255,255,.25),
+                   inset 0 -4px 8px rgba(0,0,0,.32) !important;
+        transition:transform .25s ease,box-shadow .25s ease,
+                   background .25s ease,border-color .25s ease !important;
+        cursor:pointer !important;
+        z-index:1 !important;
+    }
+    div[data-testid="stTabs"] [role="tab"]::before,
+    div[data-testid="stTabs"] [data-baseweb="tab"]::before {
+        content:"" !important;
+        position:absolute !important;
+        top:4px !important; left:10px !important; right:10px !important;
+        height:2px !important; border-radius:99px !important;
+        background:rgba(255,255,255,.48) !important;
+        pointer-events:none !important;
+    }
+    div[data-testid="stTabs"] [role="tab"]:hover,
+    div[data-testid="stTabs"] [data-baseweb="tab"]:hover {
+        transform:translate3d(0,-10px,22px) perspective(900px) rotateX(13deg) scale(1.06) !important;
+        background:linear-gradient(145deg,#56b8f4 0%,#287fbd 50%,#164c79 100%) !important;
+        color:#fff !important;
+        border-color:#d0edff !important;
+        box-shadow:0 12px 0 #0a2946,0 18px 0 #041322,
+                   0 30px 38px rgba(0,0,0,.58),
+                   0 0 32px rgba(64,169,245,.52),
+                   inset 0 2px 0 rgba(255,255,255,.48) !important;
+        z-index:20 !important;
+    }
+    div[data-testid="stTabs"] [role="tab"][aria-selected="true"],
+    div[data-testid="stTabs"] [data-baseweb="tab"][aria-selected="true"] {
+        transform:translate3d(0,-5px,12px) perspective(900px) rotateX(7deg) !important;
+        background:linear-gradient(145deg,#63c0fa 0%,#2b85c4 50%,#164d7a 100%) !important;
+        color:#fff !important;
+        border:1px solid #d5efff !important;
+        box-shadow:0 10px 0 #082440,0 15px 0 #041321,
+                   0 24px 32px rgba(0,0,0,.54),
+                   0 0 0 3px rgba(111,193,250,.18),
+                   0 0 34px rgba(66,165,235,.46),
+                   inset 0 2px 0 rgba(255,255,255,.5) !important;
+        z-index:12 !important;
+    }
+    div[data-testid="stTabs"] [data-baseweb="tab-highlight"],
+    div[data-testid="stTabs"] [data-baseweb="tab-border"] {
+        display:none !important;
+        opacity:0 !important;
+    }
+
+    /* SCROLL-REVEAL COLOUR + SLOW ANIMATED AURORA */
+    .stApp {
+        background:
+            radial-gradient(ellipse at 12% 12%,rgba(35,121,194,.26) 0%,transparent 35%),
+            radial-gradient(ellipse at 88% 58%,rgba(29,105,177,.25) 0%,transparent 39%),
+            linear-gradient(180deg,#030810 0%,#07172b 32%,#0b2441 68%,#123e70 100%) !important;
+        background-size:180% 180%,190% 190%,100% 240% !important;
+        background-position:0% 0%,100% 100%,center top !important;
+        background-attachment:fixed !important;
+        animation:har-aurora-scroll 26s ease-in-out infinite alternate;
+    }
+    @keyframes har-aurora-scroll {
+        0% {background-position:0% 0%,100% 100%,center top;}
+        50% {background-position:70% 30%,25% 70%,center 45%;}
+        100% {background-position:100% 100%,0% 0%,center bottom;}
+    }
+    section.main {background:transparent !important;}
+
+    /* Lift cards and metric panels; soften other cards while one is hovered. */
+    .section-card, div[data-testid="stMetric"] {
+        transform:translateZ(0);
+        transition:transform .28s ease,box-shadow .28s ease,
+                   filter .28s ease,opacity .28s ease,border-color .28s ease !important;
+        transform-style:preserve-3d;
+    }
+    .section-card:hover, div[data-testid="stMetric"]:hover {
+        transform:perspective(900px) translateY(-9px) rotateX(2deg) scale(1.025) !important;
+        border-color:#9bd8ff !important;
+        box-shadow:0 24px 42px rgba(0,0,0,.5),
+                   0 0 28px rgba(65,157,225,.28),
+                   inset 0 2px 0 rgba(255,255,255,.12) !important;
+        filter:brightness(1.13);
+        z-index:8;
+    }
+    .main .block-container:has(.section-card:hover) .section-card:not(:hover),
+    .main .block-container:has(div[data-testid="stMetric"]:hover) div[data-testid="stMetric"]:not(:hover) {
+        filter:blur(1.6px) brightness(.72);
+        opacity:.72;
+    }
+    div.stButton > button[kind="primary"] {
+        background:linear-gradient(135deg,#2e78b8,#174b7e) !important;
+        color:#fff !important;
+        border:1px solid #9bd0ff !important;
+        border-radius:14px !important;
+        box-shadow:0 10px 25px rgba(0,0,0,.34),0 0 20px rgba(65,150,230,.24) !important;
+    }
+    div.stButton > button[kind="primary"]:hover {
+        transform:translateY(-4px) scale(1.025) !important;
+        box-shadow:0 17px 34px rgba(0,0,0,.42),0 0 30px rgba(80,170,245,.44) !important;
+    }
+    @media (prefers-reduced-motion:reduce) {
+        .stApp {animation:none !important;}
+        div[data-testid="stTabs"] [role="tab"],
+        div[data-testid="stTabs"] [data-baseweb="tab"],
+        .section-card,div[data-testid="stMetric"] {transition:none !important;}
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -252,7 +400,7 @@ def load_artifacts():
 
 loaded, missing_files = load_artifacts()
 
-# ---------- PAGE NAVIGATION: INTRODUCTION / CONCLUSION / DASHBOARD ----------
+# ---------- PAGE NAVIGATION: INTRODUCTION / DASHBOARD ----------
 if "app_page" not in st.session_state:
     st.session_state.app_page = "introduction"
 
@@ -288,6 +436,12 @@ if st.session_state.app_page == "introduction":
     st.markdown('</div>', unsafe_allow_html=True)
     st.stop()
 
+
+top_nav_left, top_nav_right = st.columns([5, 1.7])
+with top_nav_right:
+    if st.button("← BACK TO INTRODUCTION", key="top_return_to_introduction", use_container_width=True, type="primary"):
+        st.session_state.app_page = "introduction"
+        st.rerun()
 
 st.markdown("""
 <div class="hero">
@@ -394,8 +548,6 @@ with tabs[1]:
 
     st.image("https://www.mdpi.com/sensors/sensors-20-06559/article_deploy/html/images/sensors-20-06559-g002-550.jpg", use_container_width=True)
     st.markdown('<div class="image-note">Example accelerometer/gyroscope time-series patterns across locomotion activities. Image source: Sensors (MDPI), smartphone locomotion activity study.</div>', unsafe_allow_html=True)
-    st.markdown("#### Scope of this implementation")
-    st.info("This implementation works with the preprocessed 561-feature dataset. It does not stream live measurements from a phone, and it should not be presented as a deployed medical or clinical monitoring system.")
 
 # ---------- TAB 3: SOLUTION APPROACH ----------
 with tabs[2]:
@@ -499,7 +651,6 @@ with tabs[4]:
         f"compared with Decision Tree, it is higher by "
         f"{(results['Random Forest']['Accuracy']-results['Decision Tree']['Accuracy'])*100:.2f} percentage points."
     )
-    st.warning("No external state-of-the-art paper/model benchmark is included in the supplied training notebook. Therefore, these results demonstrate improvement over the two project baselines (KNN and Decision Tree), not a proven improvement over all existing HAR models.")
     st.markdown("#### Reading the evaluation metrics")
     r1, r2 = st.columns(2)
     with r1:
@@ -543,56 +694,76 @@ with tabs[5]:
                                        output_dict=True, zero_division=0)
         st.dataframe(pd.DataFrame(report).T, use_container_width=True)
 
-    st.markdown("---")
-    st.markdown("#### Upload your own feature data")
-    uploaded = st.file_uploader("Upload CSV with 561 feature columns; include activity_id to calculate accuracy", type=["csv"])
-    if uploaded is not None:
-        user_df = pd.read_csv(uploaded)
-        if "activity_id" in user_df.columns:
-            y_true_user = user_df["activity_id"].astype(int)
-            user_X = user_df.drop(columns=["activity_id"])
-        else:
-            y_true_user = None
-            user_X = user_df
-
-        missing_cols = [c for c in feature_names if c not in user_X.columns]
-        extra_cols = [c for c in user_X.columns if c not in feature_names]
-        if missing_cols:
-            st.error(f"CSV is missing {len(missing_cols)} required feature columns. Upload a CSV with the same feature names and all 561 columns.")
-        elif extra_cols:
-            st.warning(f"Extra columns will be ignored: {extra_cols[:8]}")
-            user_X = user_X[feature_names]
-        else:
-            user_X = user_X[feature_names]
-
-        if not missing_cols:
-            if user_X.shape[1] != len(feature_names):
-                st.error("The uploaded data does not contain exactly 561 model features.")
-            else:
-                user_predictions = models[model_choice].predict(user_X)
-                output = pd.DataFrame({
-                    "Predicted activity ID": user_predictions,
-                    "Predicted activity": [activity_map[int(v)] for v in user_predictions]
-                })
-                if y_true_user is not None:
-                    output.insert(0, "Actual activity ID", y_true_user.to_numpy())
-                    output["Correct"] = (y_true_user.to_numpy() == user_predictions)
-                    st.metric("Uploaded-data accuracy", f"{accuracy_score(y_true_user, user_predictions)*100:.2f}%")
-                st.dataframe(output.head(100), use_container_width=True)
-                st.download_button("Download predictions CSV", output.to_csv(index=False).encode("utf-8"),
-                                   "har_predictions.csv", "text/csv")
-
 # ---------- TAB 7: FEATURE INSIGHTS ----------
 with tabs[6]:
     st.subheader("Feature insights")
     importance_path = ARTIFACT_DIR / "feature_importance.csv"
     if importance_path.exists():
-        imp = pd.read_csv(importance_path).head(20)
-        fig = px.bar(imp.sort_values("Importance"), x="Importance", y="Feature", orientation="h",
-                     title="Top 20 Random Forest feature importances",
-                     color="Importance", color_continuous_scale="Teal")
-        fig.update_layout(plot_bgcolor="white", paper_bgcolor="white")
-        st.plotly_chart(fig, use_container_width=True)
+        # Show the 20 highest-ranked features, strongest at the top.
+        imp = (
+            pd.read_csv(importance_path)
+            .sort_values("Importance", ascending=False)
+            .head(20)
+            .sort_values("Importance", ascending=True)
+        )
+
+        fig = go.Figure()
+        bar_colors = [
+            f"rgba(48,{int(132 + 92*i/max(len(imp)-1, 1))},{int(190 + 55*i/max(len(imp)-1, 1))},0.98)"
+            for i in range(len(imp))
+        ]
+        fig.add_trace(go.Bar(
+            x=imp["Importance"],
+            y=imp["Feature"],
+            orientation="h",
+            marker=dict(color=bar_colors, line=dict(color="#C6EDFF", width=0.8)),
+            text=[f"{v:.4f}" for v in imp["Importance"]],
+            textposition="outside",
+            textfont=dict(color="#F4FAFF", size=11),
+            cliponaxis=False,
+            hovertemplate="<b>%{y}</b><br>Importance: %{x:.5f}<extra></extra>"
+        ))
+        fig.update_layout(
+            template="plotly_dark",
+            title=dict(
+                text="TOP 20 RANDOM FOREST FEATURES",
+                x=0.02, xanchor="left",
+                font=dict(family="Arial, sans-serif", size=20, color="#F3F8FF")
+            ),
+            height=760,
+            autosize=True,
+            margin=dict(l=30, r=95, t=90, b=75),
+            paper_bgcolor="#071426",
+            plot_bgcolor="#0B1D33",
+            font=dict(family="Arial, sans-serif", size=13, color="#EAF4FF"),
+            showlegend=False,
+            xaxis=dict(
+                title=dict(text="Feature importance score", font=dict(size=14, color="#D8ECFF")),
+                tickfont=dict(size=12, color="#DCEBFA"),
+                gridcolor="rgba(172,207,237,0.18)",
+                zerolinecolor="rgba(172,207,237,0.35)",
+                showline=True, linecolor="rgba(172,207,237,0.35)",
+                ticks="outside", tickcolor="#9FC8E8"
+            ),
+            yaxis=dict(
+                title=dict(text="Input feature", font=dict(size=14, color="#D8ECFF")),
+                tickfont=dict(size=12, color="#FFFFFF"),
+                automargin=True,
+                gridcolor="rgba(0,0,0,0)",
+                showline=False,
+                categoryorder="array",
+                categoryarray=imp["Feature"].tolist()
+            ),
+            hoverlabel=dict(
+                bgcolor="#153B5D", bordercolor="#8FD5FF",
+                font=dict(color="#FFFFFF", size=13)
+            ),
+            bargap=0.28
+        )
+        st.plotly_chart(
+            fig, use_container_width=True,
+            config={"displayModeBar": True, "displaylogo": False, "responsive": True}
+        )
         st.caption("Feature importance indicates how much the fitted Random Forest used a feature for its splits. It does not establish causation.")
         st.markdown("#### How to interpret the ranking")
         st.write("Features near the top contributed more to the Random Forest's split decisions in this fitted model. Importance scores are model-specific: they describe how the forest used the available variables, not whether a feature independently causes or physically determines an activity.")
