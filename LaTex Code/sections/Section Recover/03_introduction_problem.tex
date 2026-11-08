@@ -1,0 +1,43 @@
+\chapter{Introduction and Problem Statement}
+\section{Introduction}
+Human Activity Recognition (HAR) refers to the automatic identification of human physical activities using measurements collected from sensors. Wearable and smartphone devices commonly contain inertial sensors such as accelerometers and gyroscopes. These sensors capture movement-related information along multiple axes. By analysing the resulting signals, a machine-learning system can infer the activity being performed.
+
+HAR has applications in health and wellness monitoring, assisted living, fitness tracking, context-aware mobile applications, rehabilitation support and human-computer interaction. A reliable activity recognition system can convert low-level sensor measurements into meaningful activity labels that are easier for an application or user to interpret.
+
+This project focuses on a supervised classification approach. Instead of processing raw sensor streams directly in the notebook, the implementation uses a prepared feature dataset. Each observation is represented by 561 numerical features derived from time-domain and frequency-domain sensor signal characteristics. The machine-learning models learn the relationship between these features and the corresponding activity labels.
+
+\section{Problem Statement}
+The problem addressed in this project is to develop and evaluate a machine-learning system that can classify a human activity into one of six predefined categories from a numerical feature vector obtained from inertial sensor measurements.
+
+The six target activities are:
+\begin{enumerate}[label=\arabic*.]
+\item Walking
+\item Walking upstairs
+\item Walking downstairs
+\item Sitting
+\item Standing
+\item Laying
+\end{enumerate}
+
+The system must learn from labelled training observations and predict the activity label for previously unseen test observations. Since several activities can produce similar sensor patterns, particularly the static postures sitting, standing and laying, and the dynamic activities involving walking, the classification task requires a model capable of learning relationships across a relatively large feature space.
+
+\section{Motivation}
+Manual interpretation of multi-axis accelerometer and gyroscope signals is difficult and does not scale well for continuous monitoring. Machine learning provides a systematic way to identify patterns in engineered sensor features. Comparing multiple algorithms also helps determine which classifier offers the best balance of predictive performance for this dataset.
+
+\section{Project Objectives}
+\begin{itemize}
+\item To load and understand the prepared HAR feature dataset.
+\item To associate numerical activity identifiers with their corresponding activity names.
+\item To inspect the data for missing values, duplicate rows and invalid numerical values.
+\item To train KNN, Decision Tree and Random Forest classifiers.
+\item To evaluate the classifiers using accuracy, precision, recall and macro F1-score.
+\item To analyse class-wise predictions using confusion matrices and classification reports.
+\item To identify influential features using Random Forest feature importance.
+\item To export the trained models and metadata for use in a Streamlit-based web application.
+\end{itemize}
+
+\section{Scope}
+The present implementation is a software-based, supervised classification workflow using the supplied train/test feature files. It demonstrates model development, evaluation, comparison and model export. The notebook does not acquire live sensor signals, perform raw-signal filtering from sensor hardware, or demonstrate on-device inference. Those activities are outside the scope of the evidence supplied for this report.
+
+\section{Expected Outcome}
+The expected outcome is a trained classifier that predicts one of the six activity categories from a 561-dimensional feature vector. The three classifiers are compared on the same test set, and the model with the highest macro F1-score is selected as the best-performing model. The notebook results identify Random Forest as the best model.

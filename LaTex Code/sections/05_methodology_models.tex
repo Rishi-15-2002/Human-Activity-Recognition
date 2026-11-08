@@ -1,0 +1,103 @@
+\chapter{Methodology and Model Development}
+\section{Overall Workflow}
+The notebook follows a sequence of data loading, feature and label preparation, data exploration, quality checking, model training, evaluation, comparison, model selection and artifact export. The original training and test partitions are retained. No additional random train-test split is created in the notebook.
+
+\section{Data Loading and Label Mapping}
+The feature-name file is read as a whitespace-separated text file. Duplicate feature names are made unique by adding suffixes to repeated names. The activity-label file maps integer class identifiers to the six activity names. The training and test feature matrices are then loaded and assigned the 561 feature names. The target vectors are loaded separately and mapped to readable activity names for exploration and plotting.
+
+\section{Preprocessing and Data Preparation}
+The preprocessing performed by the submitted notebook consists of the following steps:
+\begin{enumerate}
+\item Load the already-prepared training and test feature matrices.
+\item Load the feature names and make duplicate names unique.
+\item Load integer target labels and construct an activity-ID mapping.
+\item Inspect the feature matrix dimensions and descriptive statistics.
+\item Check for missing values, duplicated rows and non-finite values.
+\item Copy the matrices and target vectors into the model-training variables.
+\end{enumerate}
+
+\emph{The notebook reports zero missing values, zero duplicated rows and finite values throughout both feature matrices.} The feature values are already in a normalised numerical range in the supplied dataset. The notebook does not apply a separate imputation procedure or a new feature-selection stage.
+
+\subsection{Feature Distribution}
+Figure~\ref{fig:featuredist} shows histograms for the first four features in the feature list. The distributions provide an initial view of the range and spread of selected sensor-derived variables.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{feature_distributions.png}
+\caption{Distributions of four selected input features.}
+\label{fig:featuredist}
+\end{figure}
+
+\section{K-Nearest Neighbours (KNN)}
+KNN is a supervised, instance-based classification algorithm. For a new observation, it identifies the $k$ closest training observations in feature space and assigns the class most frequently represented among those neighbours. In this project, $k=5$.
+
+The Euclidean distance between two feature vectors $\mathbf{x}$ and $\mathbf{z}$ is:
+\[
+d(\mathbf{x},\mathbf{z}) =
+\sqrt{\sum_{j=1}^{p}(x_j-z_j)^2},
+\]
+where $p=561$ is the number of features. \emph{Since distance-based methods can be affected by differences in feature scale, the implementation uses a Scikit-learn pipeline containing \texttt{StandardScaler} followed by \texttt{KNeighborsClassifier(n\_neighbors=5)}. The scaler is fitted on the training data within the pipeline and then applied consistently during prediction.}
+
+\begin{lstlisting}[language=Python,caption={KNN model pipeline}]
+knn_model = Pipeline([
+    ("scaler", StandardScaler()),
+    ("classifier", KNeighborsClassifier(n_neighbors=5))
+])
+knn_model.fit(X_train_model, y_train_model)
+knn_predictions = knn_model.predict(X_test_model)
+\end{lstlisting}
+
+\section{Decision Tree Classifier}
+A Decision Tree learns a sequence of feature-based decision rules. At each internal node, the training data are divided according to a feature and threshold selected to improve class separation. A leaf node represents the predicted class.
+
+The notebook uses Scikit-learn's \texttt{DecisionTreeClassifier} with \texttt{random\_state=42}; other tree parameters are left at their library defaults. The model is fitted on the training feature matrix and used to predict the test observations.
+
+\begin{lstlisting}[language=Python,caption={Decision Tree training and prediction}]
+decision_tree_model = DecisionTreeClassifier(
+    random_state=42
+)
+decision_tree_model.fit(X_train_model, y_train_model)
+decision_tree_predictions = decision_tree_model.predict(
+    X_test_model
+)
+\end{lstlisting}
+
+\section{Random Forest Classifier}
+Random Forest is an ensemble-learning method that combines predictions from multiple decision trees. Each tree is trained using randomised samples and feature subsets. The final class is selected by aggregating the individual tree predictions, typically through majority voting.
+
+The project configures the Random Forest with 200 estimators, a fixed random seed of 42 and parallel execution using \texttt{n\_jobs=-1}. Other parameters retain their Scikit-learn defaults.
+
+\begin{lstlisting}[language=Python,caption={Random Forest training and prediction}]
+random_forest_model = RandomForestClassifier(
+    n_estimators=200,
+    random_state=42,
+    n_jobs=-1
+)
+random_forest_model.fit(X_train_model, y_train_model)
+random_forest_predictions = random_forest_model.predict(
+    X_test_model
+)
+\end{lstlisting}
+
+\section{Evaluation Metrics}
+The models are evaluated on the same 2,947 test observations. The following metrics are calculated:
+\begin{itemize}
+\item \textbf{Accuracy:} proportion of all test observations classified correctly.
+\item \textbf{Precision:} proportion of predicted examples of a class that are correct.
+\item \textbf{Recall:} proportion of actual examples of a class that are correctly identified.
+\item \textbf{F1-score:} harmonic mean of precision and recall.
+\end{itemize}
+
+For a multiclass problem, the notebook uses macro averaging for precision, recall and F1-score. Macro averaging calculates the metric separately for each class and then takes the unweighted mean:
+\[
+\text{Macro-F1} = \frac{1}{C}\sum_{c=1}^{C}F1_c,
+\qquad
+F1_c = \frac{2P_cR_c}{P_c+R_c},
+\]
+where $C=6$, $P_c$ is the precision for class $c$ and $R_c$ is its recall.
+
+\section{Best Model Selection}
+\emph{The notebook selects the model with the highest macro F1-score. This criterion gives equal weight to each of the six activity classes.} Based on the reported test results, Random Forest is selected with a macro F1-score of 0.9270.
+
+\section{Saving and Exporting Models}
+The notebook saves the three fitted estimators using Joblib. It also exports the test feature data, test labels, feature-importance values and a JSON metadata file. The metadata records feature names, activity mapping, evaluation results, selected best model and dataset dimensions. These files form the model artifacts used by the associated web application workflow.
